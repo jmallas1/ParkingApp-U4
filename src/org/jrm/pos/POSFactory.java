@@ -21,4 +21,14 @@ public class POSFactory
         //return new POSEntry(this.garage);
         return new POSCommon(new POSEntryBehavior(garage));
     }
+
+    public POS getPOS(POSType type)
+    {
+        switch(type)
+        {
+            case ENTRY: return new POSCommon(new POSEntryBehavior(garage));
+            case EXIT: return new POSCommon(new POSExitBehavior(garage));
+            default: return null;
+        }
+    }
 }
