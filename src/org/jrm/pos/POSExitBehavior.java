@@ -9,6 +9,11 @@ import org.jrm.util.TimeUtils;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * Class model for POS Exit behavior to be injected at runtime
+ * @author Jared Mallas
+ * @version 1.0
+ */
 public class POSExitBehavior implements POSBehavior
 {
     private Boolean debug = false;

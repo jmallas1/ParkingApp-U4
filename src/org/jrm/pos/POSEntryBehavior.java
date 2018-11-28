@@ -7,6 +7,11 @@ import org.jrm.util.TimeUtils;
 
 import java.util.Date;
 
+/**
+ * Class model for POS entry behavior to be injected at runtime
+ * @author Jared Mallas
+ * @version 1.0
+ */
 public class POSEntryBehavior implements POSBehavior
 {
     private Boolean debug = false;
