@@ -1,7 +1,7 @@
 package org.jrm;
 
 import org.jrm.data.garage.Garage;
-import org.jrm.pos.POSEntry;
+import org.jrm.pos.*;
 
 /**
  * Class model for a Garage entry system
@@ -14,7 +14,8 @@ public class GarageEntry
     {
         Garage gar = new Garage("Jared's Garage");
 
-        POSEntry pe = new POSEntry(gar);
+        POSFactory factory = new POSFactory(gar);
+        POS pe = factory.getPOS(POSType.ENTRY);
 
         pe.startUp();
     }

@@ -8,22 +8,20 @@ import org.jrm.util.TimeUtils;
 import java.util.Date;
 
 /**
- * Class model of a "Point of Sale" machine for entry into a parking garage
+ * Class model for POS entry behavior to be injected at runtime
  * @author Jared Mallas
  * @version 1.0
  */
-public class POSEntry
+public class POSEntryBehavior implements POSBehavior
 {
-    private Boolean debug = true;
+    private Boolean debug = false;
     private Garage location;
     private Boolean done = false;
-
     private ParkingTicket pt;
     private String userChoice;
 
-    public POSEntry(Garage someGarage)
-    {
-        this.location = someGarage;
+    public POSEntryBehavior(Garage location) {
+        this.location = location;
     }
 
     /**
@@ -64,7 +62,16 @@ public class POSEntry
                 else { pt = new ParkingTicket(); }
 
                 location.pushTicket(pt);
-
+                System.out.println("Ticket number: " + pt.getTicketID());
+                try
+                {
+                    Thread.sleep(4000);
+                }
+                catch (InterruptedException ex)
+                {
+                    System.out.println("Wait interrupted");
+                    System.exit(1);
+                }
                 displayBanner();
             }
             else if (Integer.parseInt(userChoice) == 3)

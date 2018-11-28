@@ -112,6 +112,7 @@ public class Garage
     {
         saveTickets();
         loadLedger();
+        clearLedgerFile();
         System.out.println(genDailyReport());
     }
 
@@ -178,7 +179,7 @@ public class Garage
     }
 
     /**
-     * Loads in-memory ledger from data fiel
+     * Loads in-memory ledger from data file
      */
     public void loadLedger()
     {
@@ -194,6 +195,12 @@ public class Garage
                 ledger.add(new Transaction(workingArray[0], workingArray[1], Float.parseFloat(workingArray[2])));
             }
         }
+    }
+
+    public void clearLedgerFile()
+    {
+        FileOutput fo = new FileOutput("ledger-" + this.dataFileName + ".dat");
+        fo.writeFile("");
     }
 
     /* Getters and setters */

@@ -1,7 +1,7 @@
 package org.jrm.test;
 
 import org.jrm.data.garage.Garage;
-import org.jrm.pos.POSExit;
+import org.jrm.pos.POSExitBehavior;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,26 +10,26 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// TODO: WRITE TESTS
-
-class POSExitTest {
+class POSExitBehaviorTest {
 
     Garage ga;
-    POSExit pe;
+    POSExitBehavior pe;
 
     @BeforeEach
     void setUp() {
         ga = new Garage("Some Garage");
-        pe = new POSExit(ga);
+        pe = new POSExitBehavior(ga);
     }
 
     @AfterEach
     void tearDown() {
+        ga = null;
+        pe = null;
     }
 
     @Test
-    void generateBill() {
-
+    void generateBill()
+    {
         String bill = "Receipt for vehicle: MOCK CAR 1\n" +
                 "4 hours parked: \n" +
                 "2018-10-01 07:55 - 2018-10-01 11:55\n" +

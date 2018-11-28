@@ -10,13 +10,13 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * Class model for a "Point of Sale" system for exiting a garage
+ * Class model for POS Exit behavior to be injected at runtime
  * @author Jared Mallas
  * @version 1.0
  */
-public class POSExit
+public class POSExitBehavior implements POSBehavior
 {
-    private Boolean debug = true;
+    private Boolean debug = false;
     private Garage location;
     private Boolean done = false;
     private ParkingTicket pt;
@@ -27,10 +27,7 @@ public class POSExit
 
     String userChoice;
 
-    public POSExit(Garage location)
-    {
-        this.location = location;
-    }
+    public POSExitBehavior(Garage location) { this.location = location; }
 
     /**
      * Generate a final bill / receipt for parking
