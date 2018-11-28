@@ -1,10 +1,10 @@
 package org.jrm;
 
 import org.jrm.data.garage.Garage;
-import org.jrm.pos.POSExit;
+import org.jrm.pos.*;
 
 /**
- * Class model for a garage exit system
+ * Class model for a Garage exit system
  * @author Jared Mallas
  * @version 1.0
  */
@@ -14,7 +14,8 @@ public class GarageExit
     {
         Garage gar = new Garage("Jared's Garage");
 
-        POSExit pe = new POSExit(gar);
+        POSFactory factory = new POSFactory(gar);
+        POS pe = factory.getPOS(POSType.EXIT);
 
         pe.startUp();
     }

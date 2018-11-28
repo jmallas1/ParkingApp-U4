@@ -57,7 +57,16 @@ public class POSEntryBehavior implements POSBehavior
                 else { pt = new ParkingTicket(); }
 
                 location.pushTicket(pt);
-
+                System.out.println("Ticket number: " + pt.getTicketID());
+                try
+                {
+                    Thread.sleep(4000);
+                }
+                catch (InterruptedException ex)
+                {
+                    System.out.println("Wait interrupted");
+                    System.exit(1);
+                }
                 displayBanner();
             }
             else if (Integer.parseInt(userChoice) == 3)

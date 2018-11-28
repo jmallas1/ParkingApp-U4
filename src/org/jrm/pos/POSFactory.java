@@ -18,7 +18,6 @@ public class POSFactory
 
     public POS getPOS()
     {
-        //return new POSEntry(this.garage);
         return new POSCommon(new POSEntryBehavior(garage));
     }
 
