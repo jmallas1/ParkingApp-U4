@@ -15,6 +15,7 @@ import java.util.HashMap;
  */
 public class Garage
 {
+    private GarageName gName;
     private String name;
     private String dataFileName;
     private ArrayList<Transaction> ledger;
@@ -24,7 +25,10 @@ public class Garage
 
     public Garage(String name)
     {
-        this.name = name;
+        gName = GarageName.getInstance();
+        gName.setName(name);
+
+        this.name = gName.getName();
         this.dataFileName = genDataFileName();
         this.tickets = new HashMap<String, ParkingTicket>();
         this.ledger = new ArrayList();
