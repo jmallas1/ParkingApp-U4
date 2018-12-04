@@ -1,6 +1,8 @@
 package org.jrm.pos;
 
 import org.jrm.data.garage.Garage;
+import org.jrm.data.ticket.DailyParking;
+import org.jrm.data.ticket.ParkingPricing;
 import org.jrm.data.ticket.ParkingTicket;
 import org.jrm.data.transaction.Transaction;
 import org.jrm.util.POSUtils;
@@ -42,10 +44,17 @@ public class POSExitBehavior implements POSBehavior
 
         if(details.containsKey("in"))
         {
-            rString += details.get("id") + "\n";
-            rString += TimeUtils.getHours(TimeUtils.stringDateToDate(details.get("in")), TimeUtils.stringDateToDate(details.get("out"))).toString();
-            rString += " hours parked: \n";
-            rString += details.get("in") + " - " + details.get("out") + "\n";
+            if(details.get("pricing").equals("DailyParking{}")) {
+                rString += details.get("id") + "\n";
+                rString += TimeUtils.getHours(TimeUtils.stringDateToDate(details.get("in")), TimeUtils.stringDateToDate(details.get("out"))).toString();
+                rString += " hours parked: \n";
+                rString += details.get("in") + " - " + details.get("out") + "\n";
+            }
+            else if (details.get("pricing").equals("SpecialEvent{}"))
+            {
+                rString += details.get("id") + "\n\n";
+                rString += "Special Event \n";
+            }
         }
         else
         {
@@ -91,6 +100,7 @@ public class POSExitBehavior implements POSBehavior
             bd.put("charge", String.format("%.02f", pt.getCharge(outTime)));
             bd.put("in", TimeUtils.dateToString(pt.getTimeIn()));
             bd.put("out", TimeUtils.dateToString(outTime));
+            bd.put("pricing", pt.getPricing().toString());
         }
         else
         {
@@ -156,7 +166,7 @@ public class POSExitBehavior implements POSBehavior
 
             if(billDetails.get("charge") != "nil")
             {
-                location.addToLedger(new Transaction(billDetails.get("id"), "txn", Float.parseFloat(billDetails.get("charge"))));
+                location.addToLedger(new Transaction(billDetails.get("id"), billDetails.get("pricing"), Float.parseFloat(billDetails.get("charge"))));
                 displayBanner();
                 System.out.println(generateBill(billDetails));
             }

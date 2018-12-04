@@ -16,17 +16,27 @@ public class ParkingTicket
 {
     private String ticketID;
     private Date timeIn;
+    private ParkingPricing pricing;
 
     public ParkingTicket()
     {
         this.ticketID = UUID.randomUUID().toString();
         this.timeIn = getTimeStamp();
+        this.pricing = new DailyParking();
+    }
+
+    public ParkingTicket(ParkingPricing pricing)
+    {
+        this.ticketID = UUID.randomUUID().toString();
+        this.timeIn = getTimeStamp();
+        this.pricing = pricing;
     }
 
     public ParkingTicket(String sTimeIn)
     {
         this.ticketID = UUID.randomUUID().toString();
         this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
+        this.pricing = new DailyParking();
     }
 
     public ParkingTicket(String ticketID, String sTimeIn)
@@ -34,8 +44,15 @@ public class ParkingTicket
         /* use this as you're reading in the current "garage residents" */
 
         this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
-
         this.ticketID = ticketID;
+        this.pricing = new DailyParking();
+    }
+
+    public ParkingTicket(String ticketID, String sTimeIn, ParkingPricing pricing)
+    {
+        this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
+        this.ticketID = ticketID;
+        this.pricing = pricing;
     }
 
     public Date getTimeStamp()
@@ -44,36 +61,13 @@ public class ParkingTicket
     }
 
     /**
-     * Generate an appropriate charge for parking based on the difference between
-     * garage entry (defined at ticket creation) and garage exit
+     * Generate an appropriate charge for parking based on the rules set in pricing behavior
      * @param timeOut Date / time (yyyy-MM-dd HH:mm) by which to calculate charge
      * @return Float representing the total charge for parking
      */
     public Float getCharge(Date timeOut)
     {
-        Float totalCharge;
-
-        Integer hourDif = TimeUtils.getHours(this.timeIn, timeOut);
-
-        if(hourDif <= 3)
-        {
-            hourDif = 0;
-        }
-        else
-        {
-            hourDif -=3;
-        }
-
-        totalCharge = 5f + hourDif.floatValue();
-
-        if (totalCharge > 15f)
-        {
-            return 15f;
-        }
-        else
-        {
-            return totalCharge;
-        }
+        return pricing.getFee(this.timeIn, timeOut);
     }
 
     /**
@@ -90,7 +84,7 @@ public class ParkingTicket
     @Override
     public String toString()
     {
-        return ticketID + ", " + TimeUtils.dateToString(timeIn);
+        return ticketID + ", " + TimeUtils.dateToString(timeIn) + ", " + pricing.getClass();
     }
 
     /* getters and setters */
@@ -109,5 +103,10 @@ public class ParkingTicket
 
     public void setTimeIn(Date timeIn) {
         this.timeIn = timeIn;
+    }
+
+    public Object getPricing()
+    {
+        return pricing;
     }
 }

@@ -2,6 +2,7 @@ package org.jrm.pos;
 
 import org.jrm.data.garage.Garage;
 import org.jrm.data.ticket.ParkingTicket;
+import org.jrm.data.ticket.SpecialEvent;
 import org.jrm.util.POSUtils;
 import org.jrm.util.TimeUtils;
 
@@ -35,6 +36,8 @@ public class POSEntryBehavior implements POSBehavior
 
         System.out.println("1 - Enter / print ticket");
         System.out.println("\n");
+        System.out.println("2 - Special Event");
+        System.out.println("\n");
         System.out.println("3 - Close garage");
         System.out.println("\n");
         System.out.printf("=> ");
@@ -61,6 +64,22 @@ public class POSEntryBehavior implements POSBehavior
                 }
                 else { pt = new ParkingTicket(); }
 
+                location.pushTicket(pt);
+                System.out.println("Ticket number: " + pt.getTicketID());
+                try
+                {
+                    Thread.sleep(4000);
+                }
+                catch (InterruptedException ex)
+                {
+                    System.out.println("Wait interrupted");
+                    System.exit(1);
+                }
+                displayBanner();
+            }
+            else if(Integer.parseInt(userChoice) == 2)
+            {
+                pt = new ParkingTicket(new SpecialEvent(20f));
                 location.pushTicket(pt);
                 System.out.println("Ticket number: " + pt.getTicketID());
                 try

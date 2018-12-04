@@ -1,6 +1,7 @@
 package org.jrm.test;
 
 import org.jrm.data.ticket.ParkingTicket;
+import org.jrm.data.ticket.SpecialEvent;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,14 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParkingTicketTest {
 
     ParkingTicket pt;
+    ParkingTicket specialPt;
     Float minCharge = 5f;
     Float maxTicketCharge = 15f;
-    Float lostTicketCharge = 25f;
+    Float specialEventCharge = 20f;
 
     @BeforeEach
     void setUp()
     {
         pt = new ParkingTicket("XXXX-XXXX-XXXX-XXXX", "2018-09-29 02:22");
+        specialPt = new ParkingTicket(new SpecialEvent(20f));
     }
 
     @AfterEach
@@ -47,4 +50,10 @@ class ParkingTicketTest {
         assertEquals(maxTicketCharge, pt.getCharge("2018-09-30 02:22"), "Maximum charge for 24 hours with ticket should be $15.00");
     }
 
+    @Test
+    @DisplayName("Special Event Pricing")
+    void specialEvent()
+    {
+        assertEquals(specialEventCharge, specialPt.getCharge(new Date()), "Special event charge should be $20.00");
+    }
 }
