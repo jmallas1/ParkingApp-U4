@@ -16,17 +16,27 @@ public class ParkingTicket
 {
     private String ticketID;
     private Date timeIn;
+    private ParkingPricing pricing;
 
     public ParkingTicket()
     {
         this.ticketID = UUID.randomUUID().toString();
         this.timeIn = getTimeStamp();
+        this.pricing = new DailyParking();
+    }
+
+    public ParkingTicket(ParkingPricing pricing)
+    {
+        this.ticketID = UUID.randomUUID().toString();
+        this.timeIn = getTimeStamp();
+        this.pricing = pricing;
     }
 
     public ParkingTicket(String sTimeIn)
     {
         this.ticketID = UUID.randomUUID().toString();
         this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
+        this.pricing = new DailyParking();
     }
 
     public ParkingTicket(String ticketID, String sTimeIn)
@@ -34,8 +44,8 @@ public class ParkingTicket
         /* use this as you're reading in the current "garage residents" */
 
         this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
-
         this.ticketID = ticketID;
+        this.pricing = new DailyParking();
     }
 
     public Date getTimeStamp()
@@ -51,29 +61,7 @@ public class ParkingTicket
      */
     public Float getCharge(Date timeOut)
     {
-        Float totalCharge;
-
-        Integer hourDif = TimeUtils.getHours(this.timeIn, timeOut);
-
-        if(hourDif <= 3)
-        {
-            hourDif = 0;
-        }
-        else
-        {
-            hourDif -=3;
-        }
-
-        totalCharge = 5f + hourDif.floatValue();
-
-        if (totalCharge > 15f)
-        {
-            return 15f;
-        }
-        else
-        {
-            return totalCharge;
-        }
+        return pricing.getFee(this.timeIn, timeOut);
     }
 
     /**
