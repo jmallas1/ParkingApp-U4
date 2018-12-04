@@ -1,6 +1,8 @@
 package org.jrm.data.garage;
 
+import org.jrm.data.ticket.ParkingPricing;
 import org.jrm.data.ticket.ParkingTicket;
+import org.jrm.data.ticket.SpecialEvent;
 import org.jrm.data.transaction.Transaction;
 import org.jrm.io.FileInput;
 import org.jrm.io.FileOutput;
@@ -55,8 +57,10 @@ public class Garage
         String rString = new String();
         Float totalReceipts = 0f;
         Float totalTickets = 0f;
+        Float totalSpecial = 0f;
         Float totalFee = 0f;
         Integer tickets = 0;
+        Integer special = 0;
         Integer lost = 0;
 
         rString += this.name + "\n";
@@ -77,12 +81,22 @@ public class Garage
             }
             else
             {
-                tickets++;
-                totalTickets+=txn.getCharge();
+                if(txn.getTxnType().equals("DailyParking{}"))
+                {
+                    tickets++;
+                    totalTickets+=txn.getCharge();
+                }
+                else if(txn.getTxnType().equals("SpecialEvent{}"))
+                {
+                    special++;
+                    totalSpecial+=txn.getCharge();
+                }
+
             }
         }
 
         rString += "$" + String.format("%.02f", totalTickets) + " was collected for " + tickets + " checkins\n\n";
+        rString += "$" + String.format("%.02f", totalSpecial) + " was collected for " + special + " special event tickets\n\n";
         rString += "$" + String.format("%.02f", totalFee) + " was collected for " + lost + " lost tickets\n\n\n";
         rString += "$" + String.format("%.02f", totalReceipts) + " was collected overall.\n";
         return rString;
@@ -115,8 +129,6 @@ public class Garage
     public void closeGarage()
     {
         saveTickets();
-        loadLedger();
-        clearLedgerFile();
         System.out.println(genDailyReport());
     }
 
@@ -133,7 +145,15 @@ public class Garage
             while ((line = fi.readLine()) != null)
             {
                 workingArray = line.split(", ");
-                pushTicket(new ParkingTicket(workingArray[0], workingArray[1]));
+                if(workingArray[2].matches("(.*)DailyParking"))
+                {
+                    pushTicket(new ParkingTicket(workingArray[0], workingArray[1]));
+                }
+                else
+                {
+                    pushTicket(new ParkingTicket(workingArray[0], workingArray[1], new SpecialEvent(20f)));
+                }
+
 
             }
         }
@@ -163,48 +183,6 @@ public class Garage
     public void addToLedger(Transaction txn)
     {
         ledger.add(txn);
-        saveLedger();
-    }
-
-    /**
-     * Persists in-memory ledger to data file
-     */
-    public void saveLedger()
-    {
-        FileOutput fo = new FileOutput("ledger-" + this.dataFileName + ".dat");
-        String records = new String();
-
-        for (Transaction tnx : ledger)
-        {
-            records += tnx.toString() + "\n";
-        }
-
-        fo.writeFile(records.trim());
-    }
-
-    /**
-     * Loads in-memory ledger from data file
-     */
-    public void loadLedger()
-    {
-        String line;
-        String[] workingArray;
-
-        FileInput fi = new FileInput("ledger-" + this.dataFileName + ".dat");
-        if(fi.filePath != null)
-        {
-            while ((line = fi.readLine()) != null)
-            {
-                workingArray = line.split(", ");
-                ledger.add(new Transaction(workingArray[0], workingArray[1], Float.parseFloat(workingArray[2])));
-            }
-        }
-    }
-
-    public void clearLedgerFile()
-    {
-        FileOutput fo = new FileOutput("ledger-" + this.dataFileName + ".dat");
-        fo.writeFile("");
     }
 
     /* Getters and setters */

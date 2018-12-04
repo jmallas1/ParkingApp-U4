@@ -19,4 +19,9 @@ public class SpecialEvent implements ParkingPricing
     public Float getFee(Date timeIn, Date timeOut) {
         return ParkingFee;
     }
+
+    @Override
+    public String toString() {
+        return "SpecialEvent{}";
+    }
 }

@@ -34,4 +34,9 @@ public class DailyParking implements ParkingPricing
             return totalCharge;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DailyParking{}";
+    }
 }

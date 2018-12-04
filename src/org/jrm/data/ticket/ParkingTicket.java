@@ -48,14 +48,20 @@ public class ParkingTicket
         this.pricing = new DailyParking();
     }
 
+    public ParkingTicket(String ticketID, String sTimeIn, ParkingPricing pricing)
+    {
+        this.timeIn = TimeUtils.stringDateToDate(sTimeIn);
+        this.ticketID = ticketID;
+        this.pricing = pricing;
+    }
+
     public Date getTimeStamp()
     {
         return new Date();
     }
 
     /**
-     * Generate an appropriate charge for parking based on the difference between
-     * garage entry (defined at ticket creation) and garage exit
+     * Generate an appropriate charge for parking based on the rules set in pricing behavior
      * @param timeOut Date / time (yyyy-MM-dd HH:mm) by which to calculate charge
      * @return Float representing the total charge for parking
      */
@@ -78,7 +84,7 @@ public class ParkingTicket
     @Override
     public String toString()
     {
-        return ticketID + ", " + TimeUtils.dateToString(timeIn);
+        return ticketID + ", " + TimeUtils.dateToString(timeIn) + ", " + pricing.getClass();
     }
 
     /* getters and setters */
@@ -97,5 +103,10 @@ public class ParkingTicket
 
     public void setTimeIn(Date timeIn) {
         this.timeIn = timeIn;
+    }
+
+    public Object getPricing()
+    {
+        return pricing;
     }
 }
